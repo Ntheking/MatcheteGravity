@@ -1,0 +1,3 @@
+C:/Users/natan/AppData/Roaming/Mathematica/Applications/Matchete/Package/cmake-build-debug/CMakeFiles/Package.dir
+C:/Users/natan/AppData/Roaming/Mathematica/Applications/Matchete/Package/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/natan/AppData/Roaming/Mathematica/Applications/Matchete/Package/cmake-build-debug/CMakeFiles/rebuild_cache.dir
