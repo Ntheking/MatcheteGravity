@@ -46,6 +46,8 @@ PackageScope["WilsonLine"]
 PackageScope["WilsonTerm"]
 PackageScope["GenericIndex"]
 PackageScope["XOrders"]
+PackageScope["PropGravitonExpand"]
+PackageScope["PropBosonExpand"]
 
 
 PackageScope["Fields"]
@@ -174,7 +176,7 @@ PropExpand[fType_, mass_, ord_, OptionsPattern[]]:= Switch[$FieldTypes[fType, Ty
 	,Vector,
 		-PropBosonExpand[mass, ord]
 	,Graviton,
-		-PropBosonExpand[mass,ord]
+		PropGravitonExpand[mass,ord]
 	,_,
 		PropBosonExpand[mass, ord]
 ]
@@ -207,8 +209,29 @@ PropBosonExpand[mass_, ord_]:= Module[{indices, m, set, singleCDs,  pairCDs},
 	, {m, 0, Floor[ord/2]}]
 ]
 
-(*Add GravitonExpand thing here*)
-PropGravitonExpand[mass_, ord_]:= Module[{indices, m, set, singleCDs,  pairCDs},
+
+(* ::Subsubsection:: *)
+(*Expansion of graviton propagator*)
+
+
+(* ::Text:: *)
+(*The expansion is the n'th EFT order term of Pabcd/[(k+ P)^2 - M^2] = Pabcd/[k^2 - M^2] \sum_{n=0} ( -1)^n ( [2 k.P + P^2] / [k^2 - M^2] )^n , where Pabcd is the mass dependent numerator.*)
+
+
+PropGravitonExpand[mass_, ord_]:= Module[{c,m,x,P,ind1,ind2,ind3,ind4},
+	P[mu_,nu_]:=Metric[mu,nu]-LoopMom[Index[mu,Lorentz]]LoopMom[Index[nu,Lorentz]]/mass^2/.{LoopMom[Index[aa_,Lorentz]]:>LoopMom[Index[aa,Lorentz]]+I*c*OpenCD@{aa}};
+	x = CoefficientList[Collect[1/2(P[ind1,ind3]P[ind2,ind4]+P[ind1,ind4]P[ind2,ind3])-1/3P[ind1,ind2]P[ind3,ind4],c],c];
+	If[mass===0,FuncNCM[1/2*(Metric[ind1,ind3]Metric[ind2,ind4]+Metric[ind1,ind4]Metric[ind2,ind3]-Metric[ind1,ind2]Metric[ind3,ind4]),PropGravitonExpandHelper[mass, ord]],
+	Sum[FuncNCM[x[m],PropGravitonExpandHelper[mass, ord-m+1]],{m,1,5}]]
+	]
+
+
+PropGravitonExpandHelper[mass_, -4]:= 0;
+PropGravitonExpandHelper[mass_, -3]:= 0;
+PropGravitonExpandHelper[mass_, -2]:= 0;
+PropGravitonExpandHelper[mass_, -1]:= 0;
+PropGravitonExpandHelper[mass_, 0]:= Prop@ mass;
+PropGravitonExpandHelper[mass_, ord_]:= Module[{indices, m, set, singleCDs,  pairCDs},
 	indices= Index[#, Lorentz]&/@ Table[Unique@ "mu", {m, ord}]; 
 	
 	(*Sum over the number of D^2 insertions*)

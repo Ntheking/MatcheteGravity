@@ -1150,6 +1150,7 @@ FieldStrength[_, _, {Bar@ a_, a_}, __]:= 0;
 
 (* Order the Lorentz indices canonically *)
 FieldStrength[label_, {\[Mu]_,\[Nu]_}, rest___] := -FieldStrength[label, {\[Nu],\[Mu]}, rest] /; !OrderedQ[{\[Mu],\[Nu]}]
+Graviton[\[Mu]_,\[Nu]_] := Graviton[\[Nu],\[Mu]] /; !OrderedQ[{\[Mu],\[Nu]}]
 
 
 (* ::Subsection::Closed:: *)
